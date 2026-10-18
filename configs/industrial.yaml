@@ -1,0 +1,46 @@
+dataset: metropt3
+raw_csv: data/raw/metropt3/MetroPT3(AirCompressor).csv
+raw_csv_index_col: 0
+label_source: "Data Description_Metro.pdf, p.3 (transcribed)"
+sample_rate_hz: 0.1
+sample_interval_s: 10
+
+tags:
+  continuous: [TP2, TP3, H1, DV_pressure, Reservoirs, Oil_temperature, Motor_current]
+  state: [COMP, DV_eletric, Towers, MPG, LPS, Pressure_switch, Oil_level]  # DV_eletric: typo in source CSV, keep verbatim
+  counter: [Caudal_impulses]
+
+regime:
+  column: COMP
+  under_load_value: 0
+  off_value: 1
+  filter_policy: "drop windows where COMP transitions within the window"
+  measured:
+    under_load_row_fraction: 0.163
+    failure_rows_under_load: 29821
+    positive_rate_all: 0.0197
+    positive_rate_under_load: 0.1206
+
+failures:
+  - id: failure_1
+    start: "2020-04-18T00:00:00Z"
+    end: "2020-04-18T23:59:00Z"
+    type: air_leak
+  - id: failure_2
+    start: "2020-05-29T23:30:00Z"
+    end: "2020-05-30T06:00:00Z"
+    type: air_leak
+  - id: failure_3
+    start: "2020-06-05T10:00:00Z"
+    end: "2020-06-07T14:30:00Z"
+    type: air_leak
+  - id: failure_4
+    start: "2020-07-15T14:30:00Z"
+    end: "2020-07-15T19:00:00Z"
+    type: air_leak
+
+lead_time_hours: 24
+
+features:
+  windows_samples: [60, 180, 360]
+  step_samples: 6
