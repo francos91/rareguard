@@ -1,0 +1,42 @@
+dataset: baf_base
+raw_csv: data/raw/baf_base/Base.csv
+label_col: fraud_bool
+time_col: month
+class_balance: 0.011029
+
+splits:
+  train_months: [0, 1, 2, 3, 4]
+  val_months:   [5]
+  test_months:  [6, 7]
+
+categoricals:
+  payment_type:      {strategy: ordinal, cardinality: 5}
+  employment_status: {strategy: ordinal, cardinality: 7}
+  housing_status:    {strategy: ordinal, cardinality: 7}
+  source:            {strategy: binary,  cardinality: 2}
+  device_os:         {strategy: ordinal, cardinality: 5}
+
+sentinel_missing:
+  columns: [prev_address_months_count, bank_months_count,
+            current_address_months_count, session_length_in_minutes,
+            credit_risk_score, device_distinct_emails_8w]
+  sentinel_value: -1
+  replace_with: NaN
+
+missing_indicators:
+  - column: prev_address_months_count
+    fraud_rate_ratio_when_missing: 4.56
+  - column: bank_months_count
+    fraud_rate_ratio_when_missing: 1.77
+
+drift_observed:
+  month_0: 0.01133
+  month_1: 0.00939
+  month_2: 0.00875
+  month_3: 0.00922
+  month_4: 0.01137
+  month_5: 0.01183
+  month_6: 0.01341
+  month_7: 0.01475
+  peak_to_trough_ratio: 1.69
+  note: "Training base rate ~1.0%; test ~1.4%. Frozen calibration expected to be too conservative."
